@@ -1,4 +1,4 @@
-var GameOfLife = function() {	
+var GameOfLife = function() {
 	var self = {};
 
 	//lifeRep is the representation of the board of cells
@@ -6,15 +6,16 @@ var GameOfLife = function() {
 	//each cell in neighbors has a value equal to the number of 
 	//neighbors with a value of 1 of the corresponding cell in lifeRep.
 	var neighbors = []; 
-	
+
 	self.board = lifeRep;
 
 	var MAX_X = 10;
 	var MAX_Y = 10;
 
-	//takes in the position of the cell in lifeRep, 
+	//Takes in the position of the cell in lifeRep, 
 	//where x is the column index and y is the row index.
 	//it then adds one to the surrounding cells in neighbors.
+	//size of neighbors should stay the same.
 	neighbors.increment = function(x, y){
 		for (var i = x-1; i<=x+1; i++){
 			for (var j = y-1; j<=y+1; j++){
@@ -24,7 +25,8 @@ var GameOfLife = function() {
 		this[y][x]-= 1;
 	}
 
-	//updates neighbors to accomodate for updated lifeRep.
+	//Updates neighbors to accomodate for updated lifeRep.
+	//size of neighbors should remain the same.
 	neighbors.update = function(){
 		this.reset();
 		for (var j=0; j<MAX_Y; j++){
@@ -36,7 +38,8 @@ var GameOfLife = function() {
 		}
 	}
 
-	//resets neighbors to contain all 0's
+	//Resets neighbors to contain all 0's and have the dimensions of
+	//MAX_Y+2 by MAX_X+2.
 	neighbors.reset = function(){
 		for (var j = -1; j<MAX_Y+1; j++){
 			var neighborRow = [];
@@ -47,7 +50,7 @@ var GameOfLife = function() {
 		}
 	}
 
-	//source equals a double array of 1's and 0's with dimensions MAX_Y by MAX_X. 
+	//Source equals a double array of 1's and 0's with dimensions MAX_Y by MAX_X. 
 	//If source is not passed, reset resets lifeRep to a random 
 	//configuration and resets neighbors to contain all 0's. If source
 	//is passed, then lifeRep is set to source. 
@@ -77,6 +80,7 @@ var GameOfLife = function() {
 	//then the cell is updated to 0.
 	//if a cell has a value of 0 and has exactly 3 neighbors with a value of 1, 
 	//then the cell is updated to 1. 
+	//lifeRep should remain the same size. 
 	self.update = function(){
 		neighbors.update();
 		for (var j=0; j<MAX_Y; j++){
