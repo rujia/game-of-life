@@ -1,54 +1,138 @@
-
-(function(){
-	// define some colors
-	var black = Color(0,0,0);
-	var red = Color(255,0,0);
-	var green = Color(0,255,0);
-	var blue = Color(0,0,255);
-	var white = Color(255, 255, 255);
-
-	// create the drawing pad object and associate with the canvas
-	pad = Pad(document.getElementById('canvas'));
-	pad.clear();
-    
-	// set constants to be able to scale to any canvas size
-	var MAX_X = 10;
-	var MAX_Y = 10;
-	var x_factor = pad.get_width() / MAX_X;
-	var y_factor = pad.get_height() / MAX_Y;
-  
-	// draw a box
-	pad.draw_rectangle(Coord(0, 0), pad.get_width(), pad.get_height(), 10, black);
+$(function(){
+    var mouseDown = false;
+    var canDraw = true;
+    var INITIAL_INTERVAL_ID = 0;
 
 	var game = GameOfLife();
 
-	var LINE_WIDTH = 0;
+	//set dimensions of the board
+	var MAX_X = game.board[0].length;
+	var MAX_Y = game.board.length;
 
-	//draws game.board onto canvas
-	var draw = function() {
+	//make the board
+	var makeboard = function(){
 		for (var j = 0; j<MAX_Y; j++){
+			$("#grid").append("<div class='row' data-row='"+ j + "'></div>");
 			for (var i = 0;i<MAX_X; i++){
-				if (game.board[j][i] == 1){
-					pad.draw_rectangle(Coord(i*x_factor, j*y_factor), 
-						x_factor, y_factor, LINE_WIDTH, green, green);
-
-				}
-				else {
-					pad.draw_rectangle(Coord(i*x_factor, j*y_factor), 
-						x_factor, y_factor, LINE_WIDTH, black, black);
-				}
+				$(".row[data-row='" + j + "']").append("<div class='cell' data-col='"+ i+ "'></div>");
 			}
 		}
+	};
+	makeboard();
+
+	//set the appropriate width and height of each cell
+	$(".cell").css("height", $("#grid").css("height").substring(0,$("#grid").css("height").indexOf("p"))/MAX_Y+"px")
+	.css("width", $("#grid").css("width").substring(0,$("#grid").css("width").indexOf("p"))/MAX_X+"px");
+
+
+	//draws game.board onto display
+	var draw = function() {
+		$(".cell").each(function(){
+			var row = parseInt($(this).parent().attr('data-row'), 10);
+	        var col = parseInt($(this).attr('data-col'), 10);
+			if (game.board[row][col] === 1){
+    			$(this).addClass("alive");
+			}
+			else {
+				$(this).removeClass("alive");
+			}
+		});
 	}
 
-	//update the game board and draw the updated board onto the canvas
+	//update the game board and show the updated board
 	var update = function(){
 		game.update();
 		draw();
 	}
 
-	game.reset();
-	draw();
+	var intervalID = INITIAL_INTERVAL_ID; 
 
-	var intervalID = setInterval(update, 100);
-})();
+	
+	$("#start").click(function(){
+		console.log(intervalID);
+		if (intervalID===0){
+			intervalID = setInterval(update, 10);
+			$(this).text("Pause");
+			$("#step").prop("disabled", true);
+			$("#clear").prop("disabled", true);
+			$("#random").prop("disabled", true);
+		}
+		else {
+			clearInterval(intervalID);
+			intervalID= INITIAL_INTERVAL_ID;
+			$(this).text("Start");
+			$("#step").prop("disabled", false);
+			$("#clear").prop("disabled", false);
+			$("#random").prop("disabled", false);
+		}
+	});
+
+	//On click, updates the game and show the updated board
+	$("#step").click(function(){
+		update();
+	})
+
+	//On click, reverses the value of canDraw, 
+	//and updates the text of the button to reflect current function
+	$("#draw").click(function(){
+		if (!canDraw) $(this).text("Erase");
+		else $(this).text("Draw");
+		canDraw = !canDraw;
+	});
+
+	//On click, clears game board and displays board
+	$("#clear").click(function(){
+		game.reset(false);
+		$(".cell").each(function(){
+			$(this).removeClass("alive");
+		});
+	});
+
+	//On click, randomizes game board and displays board
+	$("#random").click(function(){
+		game.reset(true);
+		draw();
+	})
+	
+	//On click, change status of cell to alive if canDraw is true, 
+	//else change status of cell to dead.
+	$(".cell").click(function(){
+		var row = parseInt($(this).parent().attr('data-row'), 10);
+        var col = parseInt($(this).attr('data-col'), 10);
+		if (canDraw){
+	        game.addCell(row,col);
+		    $(this).addClass("alive");
+		}
+		else{
+			game.removeCell(row,col);
+		    $(this).removeClass("alive");
+		}
+	});
+
+	//On mouseover, if mouseDown is true then change status of cell to 
+	//alive if canDraw is true and dead if false.
+	$(".cell").mouseover(function(){
+		if (mouseDown){
+			var row = parseInt($(this).parent().attr('data-row'), 10);
+	        var col = parseInt($(this).attr('data-col'), 10);
+	        if (canDraw){
+		        game.addCell(row,col);
+		        $(this).addClass("alive");
+			}
+			else{
+				game.removeCell(row,col);
+				$(this).removeClass("alive");
+			}
+		}
+	});
+
+	//On mousedown, set mouseDown to true
+	$("#grid").mousedown(function(){
+		mouseDown = true;
+	});
+
+	//On mouseup, set mouseDown to false
+	$(document).mouseup(function(){
+		mouseDown = false;
+	});
+});

@@ -1,6 +1,5 @@
 test("update from still lifes", function() {
-	var game = GameOfLife();
-	var board = [
+	var hi = [
 		[0,1,1,0,0,0,1,1,0,0],
 		[0,1,1,0,0,1,0,0,1,0],
 		[0,0,0,0,0,0,1,0,1,0],
@@ -12,7 +11,9 @@ test("update from still lifes", function() {
 		[0,1,0,1,0,0,0,0,0,0],
 		[0,0,1,0,0,0,0,0,0,0],
 	]
-	game.reset(board);
+
+	var game = GameOfLife(hi);
+
 	var result = [
 		[0,1,1,0,0,0,1,1,0,0],
 		[0,1,1,0,0,1,0,0,1,0],
@@ -26,7 +27,7 @@ test("update from still lifes", function() {
 		[0,0,1,0,0,0,0,0,0,0],
 	]
 
-	deepEqual(game.board, board);
+	deepEqual(game.board, hi);
 
 	game.update();
 	deepEqual(game.board, result);
@@ -39,7 +40,6 @@ test("update from still lifes", function() {
 });
 
 test("update from oscillators", function() {
-	var game = GameOfLife();
 	var board = [
 		[0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0],
@@ -52,7 +52,9 @@ test("update from oscillators", function() {
 		[0,1,1,1,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0],
 	]
-	game.reset(board);
+
+	var game = GameOfLife(board);
+	
 	deepEqual(game.board, board);
 
 	game.update();
@@ -90,7 +92,6 @@ test("update from oscillators", function() {
 });
 
 test("update from spaceships", function(){
-	var game = GameOfLife();
 	var board = [
 		[0,0,1,0,0,0,0,0,0,0],
 		[1,0,1,0,0,0,0,0,0,0],
@@ -103,7 +104,7 @@ test("update from spaceships", function(){
 		[0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0],
 	]
-	game.reset(board);
+	var game = GameOfLife(board);
 
 	var result1 = [
 		[0,1,0,0,0,0,0,0,0,0],
@@ -232,8 +233,36 @@ test("update from spaceships", function(){
 
 test("reset from random", function() {
 	var game = GameOfLife();
-	game.reset();
+	game.reset(true);
 
-	equal(game.board.length, 10);
-	equal(game.board[0].length, 10)
+	equal(game.board.length, 50);
+	equal(game.board[0].length, 50)
 });
+
+test("reset from not random", function() {
+	var game = GameOfLife();
+	game.reset(false);
+
+	for (var j = 0; j<50; j++){
+		for (var i=0;i<50;i++){
+			equal(game.board[j][i], 0);
+		}
+	}
+
+	equal(game.board.length, 50);
+	equal(game.board[0].length, 50)
+});
+
+test("addCell", function(){
+	var game = GameOfLife();
+	game.addCell(1,2);
+
+	equal(game.board[1][2], 1);
+})
+
+test("removeCell", function(){
+	var game = GameOfLife();
+	game.removeCell(1,0);
+
+	equal(game.board[1][0], 0);
+})

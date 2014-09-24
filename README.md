@@ -1,5 +1,7 @@
 proj1
-=====
+
+PART 1
+======
 
 Game of Life
 
@@ -14,3 +16,9 @@ To avoid unnecessary exposure of variables and functions into the global environ
 For my reset function in game_of_life.js, I included functionality for the case when no arguments are passed in by initializing my board to a random collection of 1's and 0's. I could have included a js file with source boards, but by including the option to randomize, I can effectively portion off that work to the second part of my project. Additionally, this way I can program a way to initialize my board either randomly or to a source board. (https://github.com/6170-fa14/rujiazha_proj1/blob/master/game_of_life.js#L55)
 
 For the double array, neighbors, I made the dimensions for both the columns and rows to be two more than the dimensions for the double array, lifeRep, which represented the board of cells. (https://github.com/6170-fa14/rujiazha_proj1/blob/master/game_of_life.js#L41).  I made this design choice so that I would not have to add code to address edge cases in when I increment the value of the surrounding neighbors of a given cell by one. (https://github.com/6170-fa14/rujiazha_proj1/blob/master/game_of_life.js#L18). This also makes the code cleaner and easier to follow. 	
+
+
+PART 2
+======
+
+In both game_of_life.js and game_of_life_gui.js, there were parts in my code that I needed to execute inside the overall function. In order to limit the scope of the variables used in these parts, I enclosed these segments of code inside functions. 

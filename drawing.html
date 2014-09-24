@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="graphics.js"></script>
-    <style>
-        #canvas_container {position: absolute; left: 100px; top: 100px; width: 400px; height: 400px;}
-    </style>
+    <script src="jquery.js"></script>
+    <link rel="stylesheet" type = "text/css" href="game.css">
 </head>
 
 <body>
 
 <!--
-define the HTML canvas element that will hold the graphical output
+define the HTML element that will hold the graphical output
 -->
-<div id="canvas_container">
-    <canvas id="canvas"></canvas>
+<div id='grid'></div>
+
+<!--
+define the buttons the user can use to control the board
+-->
+<div >
+	<button id="start">Start</button>
+    <button id="step">Step</button>
+    <button id="draw">Erase</button>
+    <button id="clear">Clear</button>
+    <button id="random">Randomize</button>
 </div>
 
 <!--
