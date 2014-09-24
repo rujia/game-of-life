@@ -21,4 +21,8 @@ For the double array, neighbors, I made the dimensions for both the columns and 
 PART 2
 ======
 
-In both game_of_life.js and game_of_life_gui.js, there were parts in my code that I needed to execute inside the overall function. In order to limit the scope of the variables used in these parts, I enclosed these segments of code inside functions. 
+In both game_of_life.js and game_of_life_gui.js, there were parts in my code that I needed to execute once inside the overall function. In order to limit the scope of the variables used in these parts, I enclosed these segments of code inside functions. (https://github.com/6170-fa14/rujiazha_proj1/blob/master/game_of_life.js#L52 and https://github.com/6170-fa14/rujiazha_proj1/blob/master/game_of_life_gui.js#L13). 
+
+For the additional feature, I implemented features to clear the board and randomize the initial board configuration. I also implemented a draw/erase function that allows users to click and drag on the display board in order to paint or erase cells. In order to do this, I kept a variable that indicated whether the user has pressed the mouse on the display and has not yet let go. If that variable equaled true, then when a cell is moused over, it is changed to either alive or dead, depending on the settings for draw/erase. (starting from https://github.com/6170-fa14/rujiazha_proj1/blob/master/game_of_life_gui.js#L114) 
+
+I separated model from view, by keeping the model in game_of_life.js and the view in game_of_life_gui.js.  game_of_life_gui.js dealt with user input (mouse clicks/mouseovers) and board display to the browser, while game_of_life.js dealt with internal representational changes. 
